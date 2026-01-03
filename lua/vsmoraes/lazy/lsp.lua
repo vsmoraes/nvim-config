@@ -102,14 +102,18 @@ return {
             })
 
             vim.diagnostic.config({
-                -- update_in_insert = true,
+                virtual_text = true,
+                signs = true,
+                update_in_insert = false,
+                severity_sort = true,
                 float = {
-                    focusable = false,
-                    style = "minimal",
                     border = "rounded",
                     source = "always",
-                    header = "",
-                    prefix = "",
+                    wrap = true,
+                    max_width = nil,
+                    max_height = nil,
+                    focusable = true,  -- Makes the window scrollable
+                    style = "minimal",
                 },
             })
         end
