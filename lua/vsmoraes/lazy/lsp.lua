@@ -15,10 +15,6 @@ return {
     },
 
     config = function()
-        require("conform").setup({
-            formatters_by_ft = {
-            }
-        })
         local cmp = require('cmp')
         local cmp_lsp = require("cmp_nvim_lsp")
         local capabilities = vim.tbl_deep_extend(
@@ -34,6 +30,8 @@ return {
                     "lua_ls",
                     "gopls",
                     "vtsls",
+                    "kotlin_language_server",
+                    "phpactor",
                 },
                 handlers = {
                     function(server_name) -- default handler (optional)
