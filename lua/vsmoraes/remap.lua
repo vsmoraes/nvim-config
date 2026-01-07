@@ -11,3 +11,8 @@ vim.keymap.set('n', '<leader>e', function()
         vim.diagnostic.setloclist()
     end
 end, { noremap = true, silent = true, desc = "Toggle diagnostics location list" })
+
+
+vim.keymap.set('n', 'gd', '<cmd>Telescope lsp_definitions<cr>', opts)
+vim.keymap.set('n', 'gt', '<cmd>Telescope lsp_type_definitions<cr>', opts)
+vim.keymap.set('n', 'gr', '<cmd>Telescope lsp_references<cr>', opts)
