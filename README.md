@@ -30,6 +30,7 @@ It's also a good idea to run the following checks to validate everything is prop
 + Linting support via [nvim-lint](https://github.com/mfussenegger/nvim-lint) with auto-installation.
 + File tree explorer via [nvim-tree.lua](https://github.com/nvim-tree/nvim-tree.lua).
 + Tab/buffer management via [barbar.nvim](https://github.com/romgrk/barbar.nvim) - modern tab bar with file icons.
++ Multi-cursor editing via [multicursor.nvim](https://github.com/jake-stewart/multicursor.nvim) - VSCode-style multiple cursors.
 + Code highlighting via [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter).
 + Integrated terminal via [toggleterm.nvim](https://github.com/akinsho/toggleterm.nvim) with smart run/test commands.
 + Git integration via [vim-fugitive](https://github.com/tpope/vim-fugitive) - git blame, status, and more.
@@ -113,6 +114,7 @@ The leader key is set to `<Space>`.
 | `gd` | Normal | Go to definition (via Telescope) |
 | `gt` | Normal | Go to type definition (falls back to definition if not supported) |
 | `gr` | Normal | Go to references (via Telescope) |
+| `gi` | Normal | Go to implementation (via Telescope) |
 
 ## LSP Code Actions
 | Keymap | Mode | Description |
@@ -155,6 +157,14 @@ The leader key is set to `<Space>`.
 | `<leader>tp` | Normal | Previous tab |
 | `<leader>tc` | Normal | Close tab |
 
+## Multi-Cursor Editing
+| Keymap | Mode | Description |
+|--------|------|-------------|
+| `<C-d>` | Normal/Visual | Select next occurrence of word under cursor (add cursor) |
+| `<C-S-d>` (Ctrl+Shift+D) | Normal/Visual | Select previous occurrence of word under cursor (add cursor) |
+| `<C-l>` | Visual | Add cursor on each line of visual selection |
+| `<Esc>` | Normal | Clear all multi-cursors |
+
 ## Terminal Management
 | Keymap | Mode | Description |
 |--------|------|-------------|
@@ -167,6 +177,7 @@ The leader key is set to `<Space>`.
 |--------|------|-------------|
 | `<leader>rr` | Normal | Run application (auto-detects project type) |
 | `<leader>rt` | Normal | Run tests (auto-detects project type) |
+| `<leader>tf` | Normal | Run tests for current file only |
 
 ## Completion (Insert Mode)
 | Keymap | Mode | Description |
@@ -175,6 +186,7 @@ The leader key is set to `<Space>`.
 | `<C-n>` | Insert | Select next completion item |
 | `<C-y>` | Insert | Confirm completion selection |
 | `<C-Space>` | Insert | Trigger completion menu |
+| `<C-k>` | Insert | Toggle LSP signature hints (parameter info) |
 
 ## Default Vim Keymaps Worth Knowing
 These are standard Vim keymaps that are useful to know:
