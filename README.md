@@ -25,11 +25,16 @@ It's also a good idea to run the following checks to validate everything is prop
 + Code auto-completion via [nvim-cmp](https://github.com/hrsh7th/nvim-cmp).
 + LSP support via [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig) with Mason for auto-installation.
 + Pre-configured LSPs for Kotlin, PHP, Go, Lua, TypeScript, and JavaScript.
++ Code actions with beautiful preview UI via [actions-preview.nvim](https://github.com/aznhe21/actions-preview.nvim) - IntelliJ-style contextual actions.
 + Code formatting via [conform.nvim](https://github.com/stevearc/conform.nvim) with auto-format on save.
 + Linting support via [nvim-lint](https://github.com/mfussenegger/nvim-lint) with auto-installation.
 + File tree explorer via [nvim-tree.lua](https://github.com/nvim-tree/nvim-tree.lua).
++ Tab/buffer management via [barbar.nvim](https://github.com/romgrk/barbar.nvim) - modern tab bar with file icons.
++ Multi-cursor editing via [multicursor.nvim](https://github.com/jake-stewart/multicursor.nvim) - VSCode-style multiple cursors.
 + Code highlighting via [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter).
 + Integrated terminal via [toggleterm.nvim](https://github.com/akinsho/toggleterm.nvim) with smart run/test commands.
++ Git integration via [vim-fugitive](https://github.com/tpope/vim-fugitive) - git blame, status, and more.
++ Undo tree visualization via [undotree](https://github.com/mbbill/undotree) - visualize and navigate your undo history as a tree.
 + Indentation guides via [indent-blankline.nvim](https://github.com/lukas-reineke/indent-blankline.nvim).
 + Treesitter context for showing current function/class scope.
 + Dracula colors scheme via [dracula.nvim](https://github.com/Mofiqul/dracula.nvim).
@@ -109,6 +114,13 @@ The leader key is set to `<Space>`.
 | `gd` | Normal | Go to definition (via Telescope) |
 | `gt` | Normal | Go to type definition (falls back to definition if not supported) |
 | `gr` | Normal | Go to references (via Telescope) |
+| `gi` | Normal | Go to implementation (via Telescope) |
+
+## LSP Code Actions
+| Keymap | Mode | Description |
+|--------|------|-------------|
+| `<leader>ca` | Normal/Visual | Show code actions (quick fixes, refactoring, etc.) |
+| `<C-CR>` (Ctrl+Enter) | Normal/Visual/Insert | Show code actions (IntelliJ-style shortcut) |
 
 ## Telescope - Fuzzy Finder
 | Keymap | Mode | Description |
@@ -119,11 +131,39 @@ The leader key is set to `<Space>`.
 | `<leader>pWs` | Normal | Grep WORD under cursor (includes special chars) |
 | `<leader>ps` | Normal | Grep search with input prompt |
 | `<leader>vh` | Normal | Search help tags |
+| `<leader>vk` | Normal | View all keymaps (searchable) |
+| `<leader>ds` | Normal | Browse document symbols (methods, functions, classes) |
 
 ## Code Formatting
 | Keymap | Mode | Description |
 |--------|------|-------------|
 | `<leader>mp` | Normal/Visual | Format file or selected range |
+
+## Git Management
+| Keymap | Mode | Description |
+|--------|------|-------------|
+| `<leader>gb` | Normal | Git blame (vertical split on left) |
+| `<leader>gs` | Normal | Git status |
+
+## Undo Tree
+| Keymap | Mode | Description |
+|--------|------|-------------|
+| `<leader>u` | Normal | Toggle undotree - visualize and navigate undo history |
+
+## Tab Management
+| Keymap | Mode | Description |
+|--------|------|-------------|
+| `<leader>tn` | Normal | Next tab |
+| `<leader>tp` | Normal | Previous tab |
+| `<leader>tc` | Normal | Close tab |
+
+## Multi-Cursor Editing
+| Keymap | Mode | Description |
+|--------|------|-------------|
+| `<C-d>` | Normal/Visual | Select next occurrence of word under cursor (add cursor) |
+| `<C-S-d>` (Ctrl+Shift+D) | Normal/Visual | Select previous occurrence of word under cursor (add cursor) |
+| `<C-l>` | Visual | Add cursor on each line of visual selection |
+| `<Esc>` | Normal | Clear all multi-cursors |
 
 ## Terminal Management
 | Keymap | Mode | Description |
@@ -137,6 +177,7 @@ The leader key is set to `<Space>`.
 |--------|------|-------------|
 | `<leader>rr` | Normal | Run application (auto-detects project type) |
 | `<leader>rt` | Normal | Run tests (auto-detects project type) |
+| `<leader>tf` | Normal | Run tests for current file only |
 
 ## Completion (Insert Mode)
 | Keymap | Mode | Description |
@@ -145,6 +186,7 @@ The leader key is set to `<Space>`.
 | `<C-n>` | Insert | Select next completion item |
 | `<C-y>` | Insert | Confirm completion selection |
 | `<C-Space>` | Insert | Trigger completion menu |
+| `<C-k>` | Insert | Toggle LSP signature hints (parameter info) |
 
 ## Default Vim Keymaps Worth Knowing
 These are standard Vim keymaps that are useful to know:
@@ -189,3 +231,16 @@ These are standard Vim keymaps that are useful to know:
 | `*/#` | Search word under cursor forward/backward |
 | `:s/old/new/g` | Replace in line |
 | `:%s/old/new/g` | Replace in file |
+
+## Listing All Keymaps
+There are multiple ways to view all keymaps:
+
+**Recommended (Telescope):**
+- Press `<leader>vk` (Space + v + k) - Opens a fuzzy-searchable list of all keymaps
+
+**Built-in Vim Commands:**
+- `:map` - List all mappings
+- `:nmap` - List normal mode mappings
+- `:vmap` - List visual mode mappings
+- `:imap` - List insert mode mappings
+- `:tmap` - List terminal mode mappings

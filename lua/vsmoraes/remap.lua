@@ -7,6 +7,13 @@ vim.keymap.set("n", "<leader>pv", vim.cmd.Ex, { desc = "Open file explorer" })
 vim.keymap.set("n", "<S-n>", vim.cmd.NvimTreeToggle, { desc = "Toggle file tree" })
 
 -- ===========================
+-- Tab Management (Barbar)
+-- ===========================
+vim.keymap.set("n", "<leader>tn", "<Cmd>BufferNext<CR>", { desc = "Next tab" })
+vim.keymap.set("n", "<leader>tp", "<Cmd>BufferPrevious<CR>", { desc = "Previous tab" })
+vim.keymap.set("n", "<leader>tc", "<Cmd>BufferClose<CR>", { desc = "Close tab" })
+
+-- ===========================
 -- Diagnostics
 -- ===========================
 vim.keymap.set('n', '<leader>e', function()
@@ -19,8 +26,18 @@ vim.keymap.set('n', '<leader>e', function()
 end, { noremap = true, silent = true, desc = "Toggle diagnostics location list" })
 
 -- ===========================
--- LSP Navigation
+-- LSP Navigation & Actions
 -- ===========================
+-- Code actions
+vim.keymap.set({ "n", "v" }, "<leader>ca", function()
+    require("actions-preview").code_actions()
+end, { desc = "Code actions" })
+
+vim.keymap.set({ "n", "v", "i" }, "<C-CR>", function()
+    require("actions-preview").code_actions()
+end, { desc = "Code actions" })
+
+-- Go to definition
 vim.keymap.set('n', 'gd', function()
     local params = vim.lsp.util.make_position_params()
     vim.lsp.buf_request(0, 'textDocument/definition', params, function(err, result, ctx, config)
@@ -29,7 +46,7 @@ vim.keymap.set('n', 'gd', function()
         elseif not result or vim.tbl_isempty(result) then
             vim.notify('No definition found', vim.log.levels.WARN)
         else
-            vim.cmd('Telescope lsp_definitions')
+            require('telescope.builtin').lsp_definitions()
         end
     end)
 end, { desc = "Go to definition" })
@@ -47,25 +64,40 @@ vim.keymap.set('n', 'gt', function()
     end
 
     if supports_type_def then
-        vim.cmd('Telescope lsp_type_definitions')
+        require('telescope.builtin').lsp_type_definitions()
     else
         -- Fallback to regular definition
-        vim.cmd('Telescope lsp_definitions')
+        require('telescope.builtin').lsp_definitions()
     end
 end, { desc = "Go to type definition (fallback to definition)" })
 
 vim.keymap.set('n', 'gr', function()
     local params = vim.lsp.util.make_position_params()
+    params.context = { includeDeclaration = true }
     vim.lsp.buf_request(0, 'textDocument/references', params, function(err, result, ctx, config)
         if err then
             vim.notify('Error getting references: ' .. tostring(err), vim.log.levels.ERROR)
         elseif not result or vim.tbl_isempty(result) then
             vim.notify('No references found', vim.log.levels.WARN)
         else
-            vim.cmd('Telescope lsp_references')
+            require('telescope.builtin').lsp_references()
         end
     end)
 end, { desc = "Go to references" })
+
+vim.keymap.set('n', 'gi', function()
+    local params = vim.lsp.util.make_position_params()
+    vim.lsp.buf_request(0, 'textDocument/implementation', params, function(err, result, ctx, config)
+        if err then
+            vim.notify('Error getting implementations: ' .. tostring(err), vim.log.levels.ERROR)
+        elseif not result or vim.tbl_isempty(result) then
+            vim.notify('No implementations found', vim.log.levels.WARN)
+        else
+            require('telescope.builtin').lsp_implementations()
+        end
+    end)
+end, { desc = "Go to implementation" })
+
 
 -- ===========================
 -- Telescope - Fuzzy Finder
@@ -84,6 +116,8 @@ vim.keymap.set('n', '<leader>ps', function()
     require('telescope.builtin').grep_string({ search = vim.fn.input("Grep > ") })
 end, { desc = "Grep search" })
 vim.keymap.set('n', '<leader>vh', function() require('telescope.builtin').help_tags() end, { desc = "Help tags" })
+vim.keymap.set('n', '<leader>vk', function() require('telescope.builtin').keymaps() end, { desc = "View all keymaps" })
+vim.keymap.set('n', '<leader>ds', function() require('telescope.builtin').lsp_document_symbols() end, { desc = "Document symbols (methods, functions, classes)" })
 
 -- ===========================
 -- Code Formatting
@@ -97,10 +131,47 @@ vim.keymap.set({ "n", "v" }, "<leader>mp", function()
 end, { desc = "Format file or range" })
 
 -- ===========================
+-- Git Management
+-- ===========================
+vim.keymap.set("n", "<leader>gb", ":Git blame<CR>", { desc = "Git blame (vertical split on left)", noremap = true, silent = true })
+vim.keymap.set("n", "<leader>gs", vim.cmd.Git, { desc = "Git status" })
+
+-- ===========================
+-- Undo Tree
+-- ===========================
+vim.keymap.set("n", "<leader>u", vim.cmd.UndotreeToggle, { desc = "Toggle undotree", noremap = true, silent = true })
+
+-- ===========================
 -- Terminal Management
 -- ===========================
 vim.keymap.set('t', '<Esc>', [[<C-\><C-n>]], { noremap = true, silent = true, desc = "Exit terminal mode" })
 vim.keymap.set('t', '<C-q>', [[<C-\><C-n>:q<CR>]], { noremap = true, silent = true, desc = "Close terminal" })
+
+-- ===========================
+-- Multi-cursor
+-- ===========================
+vim.keymap.set({ "n", "v" }, "<C-d>", function()
+    require("multicursor-nvim").matchAddCursor(1)
+end, { desc = "Select next word occurrence" })
+
+vim.keymap.set({ "n", "v" }, "<C-S-d>", function()
+    require("multicursor-nvim").matchAddCursor(-1)
+end, { desc = "Select previous word occurrence" })
+
+-- Add cursor on each line of visual selection
+vim.keymap.set("v", "<C-l>", function()
+    require("multicursor-nvim").addCursorOperator()
+end, { desc = "Create cursor on each selected line" })
+
+-- ESC to clear all cursors
+vim.keymap.set("n", "<esc>", function()
+    local mc = require("multicursor-nvim")
+    if not mc.cursorsEnabled() then
+        mc.enableCursors()
+    elseif mc.hasCursors() then
+        mc.clearCursors()
+    end
+end, { desc = "Clear cursors" })
 
 -- ===========================
 -- Run & Test Commands
@@ -160,9 +231,9 @@ vim.keymap.set('n', '<leader>rt', function()
         -- Check for PHP
         if vim.fn.filereadable('composer.json') == 1 then
             if vim.fn.filereadable('phpunit.xml') == 1 or vim.fn.filereadable('phpunit.xml.dist') == 1 then
-                return './vendor/bin/phpunit'
+                return 'mc phpunit'
             end
-            return 'composer test || ./vendor/bin/pest'
+            return 'mc phpunit'
         end
 
         return nil
@@ -175,3 +246,43 @@ vim.keymap.set('n', '<leader>rt', function()
         print('No test command found for this project/file type')
     end
 end, { noremap = true, silent = true, desc = "Run tests" })
+
+vim.keymap.set('n', '<leader>tf', function()
+    -- Run tests for current file
+    local function get_test_file_command()
+        -- Get relative path from git root
+        local git_root = vim.fn.system('git rev-parse --show-toplevel 2>/dev/null'):gsub('\n', '')
+        local current_file_abs = vim.fn.expand('%:p')
+        local relative_file
+
+        if git_root ~= '' and vim.fn.isdirectory(git_root) == 1 then
+            -- Calculate relative path from git root
+            relative_file = current_file_abs:gsub('^' .. git_root:gsub('([^%w])', '%%%1') .. '/', '')
+        else
+            -- Fallback to relative path from current directory
+            relative_file = vim.fn.expand('%')
+        end
+
+        -- Check for PHP
+        if vim.fn.filereadable('composer.json') == 1 then
+            if vim.fn.filereadable('phpunit.xml') == 1 or vim.fn.filereadable('phpunit.xml.dist') == 1 then
+                return 'mc phpunit ' .. relative_file
+            end
+            return 'mc phpunit ' .. relative_file
+        end
+
+        -- Check for Go
+        if vim.fn.filereadable('go.mod') == 1 then
+            return 'go test ' .. vim.fn.expand('%:p:h')
+        end
+
+        return nil
+    end
+
+    local cmd = get_test_file_command()
+    if cmd then
+        require('toggleterm').exec(cmd, 2)
+    else
+        print('No test file command found for this project/file type')
+    end
+end, { noremap = true, silent = true, desc = "Run tests for current file" })

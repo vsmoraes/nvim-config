@@ -12,6 +12,7 @@ return {
         "L3MON4D3/LuaSnip",
         "saadparwaiz1/cmp_luasnip",
         "j-hui/fidget.nvim",
+        "ray-x/lsp_signature.nvim",
     },
 
     config = function()
@@ -23,6 +24,20 @@ return {
             vim.lsp.protocol.make_client_capabilities(),
             cmp_lsp.default_capabilities())
 
+            require("lsp_signature").setup({
+                bind = true, -- This is mandatory, otherwise border config won't work
+                handler_opts = {
+                    border = "rounded"
+                },
+                hint_enable = true, -- Virtual hint enable
+                hint_prefix = "📌 ", -- Icon before parameter hint
+                hi_parameter = "LspSignatureActiveParameter", -- Highlight current parameter
+                max_height = 12, -- Max height of signature floating window
+                max_width = 80, -- Max width of signature floating window
+                toggle_key = '<C-k>', -- Toggle signature on and off in insert mode
+                floating_window_above_cur_line = true, -- Show above cursor line when possible
+            })
+
             require("fidget").setup({})
             require("mason").setup()
             require("mason-lspconfig").setup({
@@ -31,7 +46,8 @@ return {
                     "gopls",
                     "vtsls",
                     "kotlin_language_server",
-                    "phpactor",
+                    "intelephense",
+                    "buf_ls",
                 },
                 handlers = {
                     function(server_name) -- default handler (optional)
@@ -68,6 +84,60 @@ return {
                                             indent_style = "space",
                                             indent_size = "2",
                                         }
+                                    },
+                                }
+                            }
+                        }
+                    end,
+                    ["intelephense"] = function()
+                        local lspconfig = require("lspconfig")
+                        lspconfig.intelephense.setup {
+                            capabilities = capabilities,
+                            settings = {
+                                intelephense = {
+                                    files = {
+                                        maxSize = 5000000, -- 5MB for large vendor files
+                                        associations = {"*.php", "*.phtml"},
+                                        exclude = {
+                                            "**/.git/**",
+                                            "**/.svn/**",
+                                            "**/.hg/**",
+                                            "**/CVS/**",
+                                            "**/.DS_Store/**",
+                                            "**/node_modules/**",
+                                            "**/bower_components/**",
+                                            "**/vendor/**/{Test,test,Tests,tests}/**",
+                                        },
+                                    },
+                                    environment = {
+                                        includePaths = {
+                                            "./vendor",
+                                        },
+                                    },
+                                    stubs = {
+                                        "apache", "bcmath", "bz2", "calendar", "com_dotnet",
+                                        "Core", "ctype", "curl", "date", "dba", "dom", "enchant",
+                                        "exif", "fileinfo", "filter", "fpm", "ftp", "gd", "hash",
+                                        "iconv", "imap", "interbase", "intl", "json", "ldap",
+                                        "libxml", "mbstring", "mcrypt", "meta", "mssql", "mysqli",
+                                        "oci8", "odbc", "openssl", "pcntl", "pcre", "PDO",
+                                        "pdo_ibm", "pdo_mysql", "pdo_pgsql", "pdo_sqlite", "pgsql",
+                                        "Phar", "posix", "pspell", "readline", "recode", "Reflection",
+                                        "regex", "session", "shmop", "SimpleXML", "snmp", "soap",
+                                        "sockets", "sodium", "SPL", "sqlite3", "standard", "superglobals",
+                                        "sybase", "sysvmsg", "sysvsem", "sysvshm", "tidy", "tokenizer",
+                                        "wddx", "xml", "xmlreader", "xmlrpc", "xmlwriter", "Zend OPcache",
+                                        "zip", "zlib",
+                                        "laravel", "phpunit"
+                                    },
+                                    diagnostics = {
+                                        enable = true,
+                                    },
+                                    completion = {
+                                        fullyQualifyGlobalConstantsAndFunctions = false,
+                                        triggerParameterHints = true,
+                                        insertUseDeclaration = true,
+                                        maxItems = 100,
                                     },
                                 }
                             }

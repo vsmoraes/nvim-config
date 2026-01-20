@@ -15,6 +15,17 @@ return {
                 php = { "php_cs_fixer" },
                 go = { "gofmt", "goimports" },
             },
+            formatters = {
+                php_cs_fixer = {
+                    command = "php-cs-fixer",
+                    args = {
+                        "fix",
+                        "--rules=@PSR12",
+                        "$FILENAME",
+                    },
+                    stdin = false,
+                },
+            },
             format_on_save = {
                 timeout_ms = 1000,
                 lsp_fallback = true,

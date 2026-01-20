@@ -6,6 +6,11 @@ return {
         "nvim-tree/nvim-web-devicons",
     },
     config = function()
-        require("nvim-tree").setup {}
+        require("nvim-tree").setup {
+            git = {
+                enable = true,
+                timeout = 600000, -- 10 minutes for large repos
+            },
+        }
     end,
 }
